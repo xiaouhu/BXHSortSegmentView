@@ -8,7 +8,6 @@
 
 #import "BXHSortSegmentView.h"
 #import "BXHSegmentItem+BXHSortMenu.h"
-#import "UIView+BXHCategory.h"
 #import "Masonry.h"
 
 @implementation BXHSortSegmentView
@@ -28,20 +27,13 @@
     return self;
 }
 
-- (void)didMoveToSuperview
+- (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    [super didMoveToSuperview];
-    if (_menuView)
+    if (!newSuperview && _menuView)
     {
-        [self.superview addSubview:_menuView];
-        [_menuView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.mas_bottom);
-            make.left.mas_equalTo(self.superview);
-            make.right.mas_equalTo(self.superview);
-            make.bottom.mas_equalTo(self.superview);
-        }];
-
+        [_menuView removeFromSuperview];
     }
+    [super willMoveToSuperview:newSuperview];
 }
 
 
@@ -85,6 +77,17 @@
     }
     else
     {
+        if (!_menuView.superview)
+        {
+            [[UIApplication sharedApplication].keyWindow addSubview:_menuView];
+            CGRect windowRect = [self.superview convertRect:self.frame toView:[UIApplication sharedApplication].keyWindow];
+            [_menuView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo([UIApplication sharedApplication].keyWindow).offset(CGRectGetMaxY(windowRect));
+                make.left.mas_equalTo([UIApplication sharedApplication].keyWindow);
+                make.right.mas_equalTo([UIApplication sharedApplication].keyWindow);
+                make.bottom.mas_equalTo([UIApplication sharedApplication].keyWindow);
+            }];
+        }
         if (_menuView && item.menu)
         {
             [_menuView showMenu:item.menu];
@@ -96,15 +99,6 @@
 - (void)setMenuContentView:(BXHSortMenuShowContentView *)menuView
 {
     _menuView = menuView;
-    if (self.superview)
-    {
-        [self.superview addSubview:_menuView];
-        [_menuView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.mas_bottom);
-            make.left.mas_equalTo(self.superview);
-            make.right.mas_equalTo(self.superview);
-            make.bottom.mas_equalTo(self.superview);
-        }];
-    }
 }
 @end
+

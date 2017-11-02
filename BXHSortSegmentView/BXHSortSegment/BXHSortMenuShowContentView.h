@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BXHSegmentMenuView.h"
 
-@interface BXHSortMenuShowContentView : UIView
+@interface BXHSortMenuShowContentView : UIControl
 
 @property (nonatomic, assign, readonly) BOOL show;
 

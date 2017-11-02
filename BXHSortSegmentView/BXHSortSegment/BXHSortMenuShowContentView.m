@@ -19,8 +19,7 @@
         self.alpha = 0;
         self.hidden = YES;
         self.clipsToBounds = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(contentTap)];
-        [self addGestureRecognizer:tap];
+        [self addTarget:self action:@selector(contentTap) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -43,7 +42,7 @@
         }
         else
         {
-            menu.frame = CGRectMake(0, -[menu showHeight], self.bounds.size.width, [menu showHeight]);
+            menu.frame = CGRectMake(0, -[menu showHeight], [UIScreen mainScreen].bounds.size.width, [menu showHeight]);
             [self menuHiddenAnimteCallBack:^(BOOL finished) {
                 [_currentMenu removeFromSuperview];
                 _currentMenu = menu;
@@ -54,7 +53,7 @@
     }
     else
     {
-        menu.frame = CGRectMake(0, -[menu showHeight], self.bounds.size.width, [menu showHeight]);
+        menu.frame = CGRectMake(0, -[menu showHeight], [UIScreen mainScreen].bounds.size.width, [menu showHeight]);
         _currentMenu = menu;
         [self addSubview:_currentMenu];
         [self showMenuAnimate];
@@ -87,7 +86,7 @@
 - (void)showMenuAnimate
 {
     self.hidden = NO;
-    [UIView animateWithDuration:0.2 animations:^{
+    [UIView animateWithDuration:0.1 animations:^{
         self.alpha = 1;
     } completion:^(BOOL finished) {
         [self showContentMenu];
@@ -103,14 +102,14 @@
 
 - (void)menuShowAnimateCallBack:(void (^)(BOOL))complete
 {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         _currentMenu.top = 0;
     } completion:complete];
 }
 
 - (void)menuHiddenAnimteCallBack:(void (^)(BOOL))complete
 {
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         _currentMenu.height = -[_currentMenu showHeight];
     } completion:complete];
 }
